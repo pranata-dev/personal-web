@@ -10,6 +10,39 @@ export function GlobalMascot() {
   const [isHero, setIsHero] = useState(pathname === "/");
 
   useEffect(() => {
+    const checkInitialState = () => {
+      if (pathname === '/') {
+        // Force hero state if on homepage and at the very top
+        if (window.scrollY < 50) {
+          setIsHero(true);
+        }
+      } else {
+        // If not on homepage, always keep it in the corner
+        setIsHero(false);
+      }
+    };
+
+    // Run immediately
+    checkInitialState();
+
+    // Also run after a slight delay to ensure it catches the state after the preloader lifts
+    const timeoutId = setTimeout(checkInitialState, 500);
+
+    const handleNativeScroll = () => {
+      if (window.scrollY === 0 && pathname === '/') {
+        setIsHero(true);
+      }
+    };
+    
+    window.addEventListener('scroll', handleNativeScroll);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('scroll', handleNativeScroll);
+    };
+  }, [pathname]);
+
+  useEffect(() => {
     // Non-home routes are automatically in corner state
     if (pathname !== "/") {
       // eslint-disable-next-line react-hooks/exhaustive-deps
