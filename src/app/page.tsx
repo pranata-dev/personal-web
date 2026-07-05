@@ -2,13 +2,29 @@ import Link from "next/link";
 import { TextRevealByWord } from "../components/ui/text-reveal";
 import { HeroScrollTrigger } from "../components/HeroScrollTrigger";
 import { StackedCardsInteraction } from "../components/ui/stacked-cards-interaction";
-import ExpandOnHover from "../components/ui/expand-on-hover";
+import { ExperienceList } from "../components/ui/experience-list";
 import { SocialCard } from "../components/ui/social-card";
 import { BouncyCardsFeatures } from "../components/ui/bouncy-cards-features";
 import { FadeInScroll } from "../components/ui/fade-in-scroll";
-import { PROJECTS_DATA, EXPERIENCES_DATA, BLOG_CATEGORIES, SOCIAL_LINKS } from "../lib/data";
+import { SOCIAL_LINKS } from "../lib/data";
+import { getProjects, getExperiences, getBlogCategories } from "../lib/notion";
 
-export default function Home() {
+export default async function Home() {
+  const projects = await getProjects();
+  const experiences = await getExperiences();
+  const categories = await getBlogCategories();
+
+  // Sort experiences by date descending
+  const sortedExperiences = [...experiences].sort((a, b) => {
+    const aIsPresent = a.duration?.toUpperCase().includes('PRESENT') || a.date?.toUpperCase().includes('PRES');
+    const bIsPresent = b.duration?.toUpperCase().includes('PRESENT') || b.date?.toUpperCase().includes('PRES');
+    if (aIsPresent && !bIsPresent) return -1;
+    if (!aIsPresent && bIsPresent) return 1;
+    
+    const aYear = parseInt(a.date?.match(/\d{4}/)?.[0] || '0');
+    const bYear = parseInt(b.date?.match(/\d{4}/)?.[0] || '0');
+    return bYear - aYear;
+  }).slice(0, 3);
   return (
     <main>
       {/* Hero Section */}
@@ -73,7 +89,11 @@ export default function Home() {
           </div>
           
           <StackedCardsInteraction 
-            cards={PROJECTS_DATA.slice(0, 4)}
+            cards={projects.slice(0, 4).map(p => ({
+              image: p.images[0] || "",
+              title: p.title,
+              description: p.shortSummary
+            }))}
           />
         </FadeInScroll>
       </section>
@@ -82,9 +102,11 @@ export default function Home() {
         <FadeInScroll className="max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop flex flex-col items-center">
           <div className="text-center mb-16">
             <h2 className="font-display-lg text-headline-md tracking-tight mb-4">Experience</h2>
-            <p className="text-secondary font-body-md max-w-xl mx-auto">Hover over the cards to explore my professional and academic background.</p>
+            <p className="text-secondary font-body-md max-w-xl mx-auto">A brief overview of my professional and academic background.</p>
           </div>
-          <ExpandOnHover data={EXPERIENCES_DATA} />
+          <div className="w-full max-w-4xl">
+            <ExperienceList experiences={sortedExperiences} />
+          </div>
         </FadeInScroll>
       </section>
 
@@ -94,7 +116,7 @@ export default function Home() {
             <h2 className="font-display-lg text-headline-md tracking-tight mb-4">My Writings</h2>
             <p className="text-secondary font-body-md max-w-xl mx-auto">Categorized thoughts.</p>
           </div>
-          <BouncyCardsFeatures categories={BLOG_CATEGORIES} />
+          <BouncyCardsFeatures categories={categories} />
         </FadeInScroll>
       </section>
 

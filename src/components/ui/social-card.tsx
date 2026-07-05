@@ -41,7 +41,7 @@ const LinkedinIcon = (props: any) => (
   </svg>
 );
 
-const TwitterIcon = (props: any) => (
+const MediumIcon = (props: any) => (
   <svg
     {...props}
     xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,9 @@ const TwitterIcon = (props: any) => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+    <ellipse cx="6" cy="12" rx="6" ry="6" />
+    <ellipse cx="17" cy="12" rx="3" ry="6" />
+    <ellipse cx="22" cy="12" rx="1" ry="6" />
   </svg>
 );
 
@@ -63,7 +65,7 @@ export function SocialCard({ socialLinks }: { socialLinks: any[] }) {
   const getIcon = (icon: any) => {
     if (icon === "LinkedinIcon") return LinkedinIcon;
     if (icon === "GithubIcon") return GithubIcon;
-    if (icon === "TwitterIcon") return TwitterIcon;
+    if (icon === "MediumIcon") return MediumIcon;
     if (icon === "Mail" || icon === Mail) return Mail;
     return Mail; // Default fallback
   };

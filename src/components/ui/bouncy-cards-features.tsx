@@ -3,20 +3,14 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Tv, Clapperboard, Microchip, BookOpen, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-
-const IconMap: Record<string, any> = {
-  Tv,
-  Clapperboard,
-  Microchip,
-  BookOpen,
-};
 
 // Categories data is passed via props
 const BounceCard = ({ category, onClick }: { category: any; onClick: () => void }) => {
-  const Icon = IconMap[category.icon];
 
   return (
     <motion.div
@@ -29,8 +23,15 @@ const BounceCard = ({ category, onClick }: { category: any; onClick: () => void 
       )}
     >
       {/* Feature Demo Block inside Card */}
-      <div className="w-full h-32 md:h-40 rounded-2xl bg-white/50 border border-timberwolf/40 flex items-center justify-center mb-6 shadow-inner">
-        {Icon && <Icon className="w-12 h-12 text-vandyke opacity-70" strokeWidth={1.5} />}
+      <div className="relative overflow-hidden w-full h-32 md:h-40 rounded-2xl bg-white/50 border border-timberwolf/40 flex items-center justify-center mb-6 shadow-inner">
+        {category.imageSrc && (
+          <Image
+            src={category.imageSrc}
+            alt={category.title}
+            fill
+            className="object-cover"
+          />
+        )}
       </div>
 
       <div className="flex justify-between items-end">
@@ -49,7 +50,6 @@ const BounceCard = ({ category, onClick }: { category: any; onClick: () => void 
 
 const Modal = ({ category, onClose }: { category: any; onClose: () => void }) => {
   const [expandedArticle, setExpandedArticle] = useState<number | null>(null);
-  const Icon = IconMap[category.icon];
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -79,8 +79,15 @@ const Modal = ({ category, onClose }: { category: any; onClose: () => void }) =>
         <div className="p-6 md:p-10 flex-shrink-0 border-b border-white/20 dark:border-black/10">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-white/50 rounded-xl shadow-sm border border-timberwolf/40">
-                {Icon && <Icon className="w-6 h-6 text-vandyke" strokeWidth={1.5} />}
+              <div className="relative w-12 h-12 bg-white/50 rounded-xl shadow-sm border border-timberwolf/40 overflow-hidden">
+                {category.imageSrc && (
+                  <Image
+                    src={category.imageSrc}
+                    alt={category.title}
+                    fill
+                    className="object-cover"
+                  />
+                )}
               </div>
               <h2 className="font-display-lg text-2xl md:text-3xl tracking-tight text-vandyke">{category.title}</h2>
             </div>
@@ -94,8 +101,9 @@ const Modal = ({ category, onClose }: { category: any; onClose: () => void }) =>
         </div>
         
         <div className="p-6 md:p-10 overflow-y-auto space-y-3">
-          {category.articles.map((article: string, i: number) => {
+          {category.articles.map((article: any, i: number) => {
             const isExpanded = expandedArticle === i;
+            const slug = article.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
 
             return (
               <motion.div 
@@ -120,7 +128,7 @@ const Modal = ({ category, onClose }: { category: any; onClose: () => void }) =>
                     "font-body-lg font-semibold text-sm md:text-base leading-relaxed transition-colors",
                     isExpanded ? "text-vandyke" : "text-vandyke/80"
                   )}>
-                    {article}
+                    {article.title}
                   </span>
                 </div>
 
@@ -134,11 +142,11 @@ const Modal = ({ category, onClose }: { category: any; onClose: () => void }) =>
                     >
                       <div className="px-4 md:px-5 pb-5 pt-1 ml-6 border-t border-timberwolf/40">
                         <p className="font-body-md text-beaver text-sm md:text-base leading-relaxed mb-5 mt-3">
-                          This is a comprehensive exploration of the subject, analyzing its historical impact, core structural mechanics, and underlying philosophical themes in a modern context.
+                          {article.summary}
                         </p>
-                        <button className="text-vandyke font-label-caps text-xs uppercase tracking-widest hover:text-beaver transition-colors flex items-center gap-2">
+                        <Link href={`/blog/${slug}`} className="text-vandyke font-label-caps text-xs uppercase tracking-widest hover:text-beaver transition-colors flex items-center gap-2">
                           Read full post <span className="text-lg leading-none">&rarr;</span>
-                        </button>
+                        </Link>
                       </div>
                     </motion.div>
                   )}
