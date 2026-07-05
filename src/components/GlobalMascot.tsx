@@ -20,7 +20,12 @@ export function GlobalMascot() {
 
     const handleVisibilityChange = (e: Event) => {
       const customEvent = e as CustomEvent<{ isPastHero: boolean }>;
-      setIsHero(!customEvent.detail.isPastHero);
+      // Absolute failsafe: If the user is at the very top, force hero state.
+      if (window.scrollY === 0) {
+        setIsHero(true);
+      } else {
+        setIsHero(!customEvent.detail.isPastHero);
+      }
     };
 
     // Failsafe: manual check on load/scroll if at the absolute top
