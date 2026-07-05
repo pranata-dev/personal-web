@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { getExperiences } from "@/lib/notion";
-import ExpandOnHover from "@/components/ui/expand-on-hover";
+import { ExperienceList } from "@/components/ui/experience-list";
 import { FadeInScroll } from "@/components/ui/fade-in-scroll";
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default async function ExperiencesPage() {
 
         {/* Providing enough min-height for the expanded text container */}
         <div className="w-full min-h-[600px] flex items-center justify-center">
-          <ExpandOnHover data={experiences} />
+          <ExperienceList experiences={experiences} />
         </div>
       </FadeInScroll>
     </main>
