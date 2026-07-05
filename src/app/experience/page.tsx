@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { CatalogIndex } from "@/components/ui/catalog-index";
 import { getExperiences } from "@/lib/notion";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Experience | Pranata",
 };

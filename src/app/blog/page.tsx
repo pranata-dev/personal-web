@@ -3,6 +3,8 @@ import { getBlogCategories } from "@/lib/notion";
 import { BouncyCardsFeatures } from "@/components/ui/bouncy-cards-features";
 import { FadeInScroll } from "@/components/ui/fade-in-scroll";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Blog | Pranata",
 };

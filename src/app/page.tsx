@@ -9,6 +9,8 @@ import { FadeInScroll } from "../components/ui/fade-in-scroll";
 import { SOCIAL_LINKS } from "../lib/data";
 import { getProjects, getExperiences, getBlogCategories } from "../lib/notion";
 
+export const revalidate = 60;
+
 export default async function Home() {
   const projects = await getProjects();
   const experiences = await getExperiences();

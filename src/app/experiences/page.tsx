@@ -3,6 +3,8 @@ import { getExperiences } from "@/lib/notion";
 import { ExperienceList } from "@/components/ui/experience-list";
 import { FadeInScroll } from "@/components/ui/fade-in-scroll";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Experience | Pranata",
 };
